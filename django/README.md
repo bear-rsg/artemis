@@ -32,19 +32,16 @@ To perform the tests:
 + Use the feedback given by Django for any failed tests to fix issues
 + Repeat this until returns a 100% pass rate
 
-
 Once finished testing, remember to reverse the changes made to the project setup:
 
 + Delete any unwanted migrations in migrations folders
 + Delete the fixtures directory, including test.json fixture, for each app
-
 
 This also complies with Ruff for testing against PEP8:
 
 + Use pip install ruff to install (if not already installed)
 + Run `ruff check .` to perform the tests
 + The pyproject.toml file in the repo root directory, can be used to customise Ruff tests
-
 
 You can use coverage to see how much of the code is included in the tests:
 
