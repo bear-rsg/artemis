@@ -19,6 +19,9 @@ DEBUG = True/False
 # Set to ['*'] if in development, or specific IP addresses and domains if in production
 ALLOWED_HOSTS = ['*']/['artemis.bham.ac.uk']
 
+# Used by Django Debug Toolbar (comment out to disable DDT)
+INTERNAL_IPS = ["127.0.0.1"]
+
 # Provide the email address for the site admin (e.g. the researcher/research team)
 ADMIN_EMAIL = '...@bham.ac.uk'
 

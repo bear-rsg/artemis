@@ -1,0 +1,113 @@
+{% extends 'admin/base.html' %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    html[data-theme="light"],
+    html[data-theme="dark"],
+    :root {
+    --primary: #004FCB;
+    --secondary: #004FCB;
+    --breadcrumbs-bg: #004FCB;
+    --button-hover-bg: #03388e;
+    --header-color: #EDF4FF;
+    --header-link-color: #EDF4FF;
+    --accent: #EDF4FF;
+    --default-button-bg: #d5ab05;
+    --default-button-hover-bg: #c19b00;
+    --selected-row: #EDF4FF;
+    }
+
+    html,
+    body {
+        background: #F0F0F0;
+    }
+
+    #site-name {
+        font-weight: 600;
+    }
+
+    #toggle-nav-sidebar {
+        height: fit-content;
+        padding: 1em 0;
+        margin-right: 0.3em;
+    }
+
+    #container {
+        padding: 0.5rem;
+        width: calc(100% - 1rem);
+    }
+
+    #header,
+    .breadcrumbs,
+    #nav-filter {
+        display: none;
+    }
+
+    nav,
+    #nav-sidebar {
+        border-radius: 1rem;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        height: fit-content;
+    }
+
+    #content-start {
+        margin-top: 0;
+    }
+
+    caption a {
+        color: #EDF4FF;
+    }
+
+    .submit-row {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        margin-bottom: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    #login-form .submit-row {
+        position: initial;
+    }
+
+    /* Small devices */
+    @media (max-width: 767px) {
+        .submit-row {
+            bottom: 4em;
+        }
+    }
+
+
+</style>
+{% endblock %}
+
+{% block header %}
+    {% include "snippets/nav.html" %}
+    {{ block.super }}
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script>
+        // Force 'light' mode
+        localStorage.setItem("theme", "light");
+        document.addEventListener('DOMContentLoaded', () => {
+            document.documentElement.setAttribute('data-theme', 'light');
+        });
+        // Force page title to be 'ARTEMIS'
+        document.title = 'ARTEMIS'
+    </script>
+{% endblock %}
+
+
+{% block userlinks %}
+    {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+    {% endif %}
+    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+        {% csrf_token %}
+        <button type="submit">{% translate 'Log out' %}</button>
+    </form>
+{% endblock %}

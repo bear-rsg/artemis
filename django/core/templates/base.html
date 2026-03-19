@@ -1,30 +1,93 @@
+<!doctype html>
+
 {% load static %}
-<!DOCTYPE html>
+
 <html lang="en">
+
     <head>
+        
         <title>ARTEMIS</title>
+
+        <!-- Meta -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:700,900" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <link rel="stylesheet" href="{% static 'css/cookies.css' %}">
+        <meta name="description" content="ARTEMIS research project at the University of Birmingham">
+        <meta name="keywords" content="ARTEMIS, humanities, art, research, birmingham, university, university of birmingham, college of arts and law">
+        <meta name="author" content="University of Birmingham">
+
+        <!-- Fonts -->
+        <!-- Roboto -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
+
+        <!-- CSS -->
+        <!-- Bootstrap -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <!-- Font Awesome 6 -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <!-- Custom -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom_xs.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom_lg.css' %}">
+
+        <!-- JavaScript: 3rd party -->
+        <!-- jQuery -->
+        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+        <!-- Bootstrap JS -->
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+        <!-- JavaScript: Custom -->
+        <script src="{% static 'js/main.js' %}"></script>
+
+        <!--Set the favicon-->
+        <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
     </head>
-    <body>
-        <main role="main" id="main">
-            {% block content %}{% endblock %}
+
+    <body id="mainbody">
+
+        {% include "snippets/nav.html" %}
+
+        <!-- Main -->
+        <main id="main">
+            <div id="main-content" class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
         </main>
-        <footer role="contentinfo">
-            <p>
-                <a href="https://www.birmingham.ac.uk/privacy/index.aspx" target="_blank">Privacy</a> |
-                <a href="https://www.birmingham.ac.uk/legal/index.aspx" target="_blank">Legal</a> |
-                <a href="https://www.birmingham.ac.uk/university/governance/policies-regs/information/index.aspx" target="_blank">Freedom of Information</a> |
-                <a href="{% url 'general:cookies' %}">Cookies</a> |
-                <a href="https://accessibility.bear.bham.ac.uk/" target="_blank">Accessibility</a>
-            </p>
+
+        <!-- Footer -->
+        <footer class="container-fluid">
+            <!-- Content -->
+            <div id="footer-content" class="container">
+                <p>
+                    ARTEMIS is a research project within the <a href="https://www.birmingham.ac.uk/university/colleges/artslaw/index.aspx">College of Arts and Law</a> at the <a href="http://www.birmingham.ac.uk">University of Birmingham</a>
+                </p>
+                <p>
+                    This website has been developed by the <a href="http://www.birmingham.ac.uk/bear-software">Research Software Group</a>
+                </p>
+                <p>
+                    <a href="https://www.birmingham.ac.uk/privacy/index.aspx" target="_blank">Privacy</a> |
+                    <a href="https://www.birmingham.ac.uk/legal/index.aspx" target="_blank">Legal</a> |
+                    <a href="https://www.birmingham.ac.uk/university/governance/policies-regs/information/index.aspx" target="_blank">Freedom of Information</a> |
+                    <a href="{% url 'general:cookies' %}">Cookies</a> |
+                    <a href="https://accessibility.bear.bham.ac.uk/statements-cal.html" target="_blank">Accessibility</a>
+                </p>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'admin:logout' %}">
+                        {% csrf_token %}
+                        <button id="footer-logout" type="submit" class="logout-link">Log Out</button>
+                    </form>
+                {% endif %}
+                <p>
+                    © University of Birmingham {% now "Y" %}
+                </p>
+            </div>
         </footer>
 
-        <!-- JavaScript -->
-        <script src="{% static 'js/cookiesmsg.js' %}"></script>
     </body>
+
+    <!-- Cookies msg (has to appear after body to work correctly) -->
+    <script src="{% static 'js/cookiesmsg.js' %}"></script>
+
 </html>

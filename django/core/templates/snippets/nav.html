@@ -1,0 +1,156 @@
+{% comment %}
+The style is embedded in the file as it's used by the main public website
+and the admin dashboard, which uses a separate CSS file. So embedding here
+so that it can be easily shared by both.
+{% endcomment %}
+
+<style>
+
+#navmain {
+    font-size: 1rem;
+    font-family: sans-serif;
+    background: white;
+    padding-top: 0.4rem;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+#mainbody #navmain ul {
+    padding-top: 0.07rem;
+    padding-bottom: 0.1rem;
+}
+
+#navmain ul {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+#navmain .nav-item {
+    text-align: center;
+    list-style-type: none;
+    text-transform: capitalize;
+    display: inline-block;
+    line-height: 1.45rem;
+}
+
+#navmain .nav-item a {
+    text-decoration: none;
+    color: #272727;
+}
+
+#navmain .nav-item.active a {
+    color: #004FCB;
+    font-weight: bold;
+}
+
+#navmain .nav-item a:hover {
+    color: #004FCB;
+}
+
+#navmain .nav-item i {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.25rem;
+}
+
+#navmain .nav-item-text {
+    width: 100%;
+    display: block;
+    margin-top: -0.4rem;
+    font-weight: normal;
+    font-size: 0.7rem;
+}
+
+/* Small devices */
+@media (min-width: 1px) {
+    #container,
+    main {
+        margin-bottom: 3rem;
+    }
+
+    #navmain {
+        top: auto;
+        bottom: 0;
+        border-top: 1px solid #DDD;
+        border-bottom: 0;
+    }
+
+    #navmain .nav-item {
+        width: calc(20% - 0.5rem);
+        min-width:3.3rem;
+    }
+}
+
+/* Large devices */
+@media (min-width: 768px) {
+    #container {
+        margin-top: 4rem;
+    }
+
+    main {
+        margin-top: 4rem;
+    }
+
+    #navmain {
+        top: 0;
+        bottom: auto;
+        border-top: 0;
+        border-bottom: 1px solid #DDD;
+    }
+
+    #navmain .nav-item {
+        width: 5rem;
+    }
+}
+
+</style>
+
+<!-- Navigation -->
+<div id="navmain">
+    <div class="container-fluid">
+
+        <ul>
+            <li class="nav-item{% if request.path == "/" %} active{% endif %}">
+                <a href="{% url 'general:welcome' %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="nav-item-text">Welcome</span>
+                </a>
+            </li>
+            <li class="nav-item{% if "/about/" in request.path %} active{% endif %}">
+                <a href="{% url 'general:about' %}">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span class="nav-item-text">About</span>
+                </a>
+            </li>
+            {% if user.is_authenticated %}
+                {% with user_id_str=user.id|stringformat:"s" %}
+                    {% with profile_url="/account/user/"|add:user_id_str|add:"/" %}
+                        <li class="nav-item{% if "/manage/" in request.path and profile_url not in request.path %} active{% endif %}">
+                            <a href="{% url 'admin:index' %}">
+                                <i class="fa-solid fa-table-cells"></i>
+                                <span class="nav-item-text">Manage</span>
+                            </a>
+                        </li>
+                        <li class="nav-item{% if profile_url in request.path %} active{% endif %}">
+                            <a href="{% url 'admin:account_user_change' user.id %}">
+                                <i class="fas fa-user"></i>
+                                <span class="nav-item-text">My Profile</span>
+                            </a>
+                        </li>
+                    {% endwith %}
+                {% endwith %}
+            {% else %}
+                <li class="nav-item{% if request.path == "/accounts/login/" %} active{% endif %}">
+                    <a href="{% url 'admin:index' %}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="nav-item-text">Login</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

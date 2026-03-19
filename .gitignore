@@ -8,6 +8,8 @@ django/media/
 django/static/
 node_modules/
 accessibility_reports/
+django/general/migrations/
+django/sent_emails/
 
 
 ###################### Django Templated gitignore paths  ######################
