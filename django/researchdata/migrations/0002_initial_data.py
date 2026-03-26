@@ -24,28 +24,6 @@ def insert_data(apps, schema_editor):
     for name in ['cultivated', 'uncultivated']:
         models.LandUse.objects.create(name=name)
 
-    # LandUseCultivation
-    for name in [
-        'grain/cereals',
-        'fruits',
-        'vegetables',
-        'olive',
-        'vine'
-    ]:
-        models.LandUseCultivation.objects.create(name=name)
-
-    # LandUseUncultivated
-    for name in [
-        'fallow land',
-        'wetland/marsh',
-        'scrubland/maquis/garrigue',
-        'forest/woodland',
-        'natural pasture/grazing land',
-        'rocky/barren ground',
-        'abandoned agricultural land',
-    ]:
-        models.LandUseUncultivated.objects.create(name=name)
-
     # FeatureType
     for name in [
         'wall',
@@ -71,8 +49,8 @@ def insert_data(apps, schema_editor):
         models.FeatureCondition.objects.create(name=name)
 
     # MaterialType
-    for name in ['pottery', 'tile', 'lithic', 'other']:
-        models.MaterialType.objects.create(name=name)
+    for order, name in enumerate(['pottery', 'tile', 'lithic', 'other']):
+        models.MaterialType.objects.create(name=name, order=order)
 
     # GridSize
     for order, name in enumerate(['5m x 5m', '10m x 10m', '20m x 20m', '40m x 40m']):

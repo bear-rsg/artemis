@@ -1,15 +1,7 @@
-from django.views.generic import (TemplateView)
 from django.http import HttpResponse
 from datetime import datetime
 from . import models
 import csv
-
-
-class SearchComingSoonTemplateView(TemplateView):
-    """
-    Class-based view to show the Search 'Coming Soon' template
-    """
-    template_name = 'researchdata/search-comingsoon.html'
 
 
 def export_csv(request):

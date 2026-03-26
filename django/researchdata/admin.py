@@ -71,8 +71,6 @@ admin.site.register(models.Spacing, HiddenGenericAdminView)
 admin.site.register(models.VisibilityPercentage, HiddenGenericAdminView)
 admin.site.register(models.Soil, HiddenGenericAdminView)
 admin.site.register(models.LandUse, HiddenGenericAdminView)
-admin.site.register(models.LandUseCultivation, HiddenGenericAdminView)
-admin.site.register(models.LandUseUncultivated, HiddenGenericAdminView)
 admin.site.register(models.FeatureType, HiddenGenericAdminView)
 admin.site.register(models.FeatureCondition, HiddenGenericAdminView)
 admin.site.register(models.MaterialType, HiddenGenericAdminView)
@@ -92,58 +90,23 @@ inline_extra_default = 1
 inline_view_default = 'collapse'
 
 
-class SurveyMaterialCountedInline(admin.TabularInline):
+class SurveyUnitMaterialsCountedAndCollectedInline(admin.TabularInline):
     """
-    A subform/inline form for SurveyMaterialCounted
+    A subform/inline form for SurveyUnitMaterialsCountedAndCollected
     """
-    model = models.SurveyMaterialCounted
+    model = models.SurveyUnitMaterialsCountedAndCollected
     extra = inline_extra_default
     classes = [inline_view_default]
 
 
-class SurveyMaterialCollectedInline(admin.TabularInline):
+class PhotographSurveyUnitMaterialBagsCollectedInline(admin.TabularInline):
     """
-    A subform/inline form for SurveyMaterialCollected
+    A subform/inline form for PhotographSurveyUnitMaterialBagsCollected
     """
-    model = models.SurveyMaterialCollected
+    model = models.PhotographSurveyUnitMaterialBagsCollected
     extra = inline_extra_default
     classes = [inline_view_default]
-
-
-class PhotographSurveyMaterialBagsCollectedPotteryInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographSurveyMaterialBagsCollectedPottery
-    """
-    model = models.PhotographSurveyMaterialBagsCollectedPottery
-    extra = inline_extra_default
-    classes = [inline_view_default]
-
-
-class PhotographSurveyMaterialBagsCollectedTileInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographSurveyMaterialBagsCollectedTile
-    """
-    model = models.PhotographSurveyMaterialBagsCollectedTile
-    extra = inline_extra_default
-    classes = [inline_view_default]
-
-
-class PhotographSurveyMaterialBagsCollectedLithicInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographSurveyMaterialBagsCollectedLithic
-    """
-    model = models.PhotographSurveyMaterialBagsCollectedLithic
-    extra = inline_extra_default
-    classes = [inline_view_default]
-
-
-class PhotographSurveyMaterialBagsCollectedOtherInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographSurveyMaterialBagsCollectedOther
-    """
-    model = models.PhotographSurveyMaterialBagsCollectedOther
-    extra = inline_extra_default
-    classes = [inline_view_default]
+    fields = ('material', 'image', 'caption', 'date', 'photographer')
 
 
 class PhotographSurveyRecordInline(admin.TabularInline):
@@ -164,40 +127,14 @@ class PhotographFeatureInline(admin.TabularInline):
     classes = [inline_view_default]
 
 
-class PhotographFeatureMaterialCollectedPotteryInline(admin.TabularInline):
+class PhotographFeatureMaterialCollectedInline(admin.TabularInline):
     """
-    A subform/inline form for PhotographFeatureMaterialCollectedPottery
+    A subform/inline form for PhotographFeatureMaterialCollected
     """
-    model = models.PhotographFeatureMaterialCollectedPottery
+    model = models.PhotographFeatureMaterialCollected
     extra = inline_extra_default
     classes = [inline_view_default]
-
-
-class PhotographFeatureMaterialCollectedTileInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographFeatureMaterialCollectedTile
-    """
-    model = models.PhotographFeatureMaterialCollectedTile
-    extra = inline_extra_default
-    classes = [inline_view_default]
-
-
-class PhotographFeatureMaterialCollectedLithicInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographFeatureMaterialCollectedLithic
-    """
-    model = models.PhotographFeatureMaterialCollectedLithic
-    extra = inline_extra_default
-    classes = [inline_view_default]
-
-
-class PhotographFeatureMaterialCollectedOtherInline(admin.TabularInline):
-    """
-    A subform/inline form for PhotographFeatureMaterialCollectedOther
-    """
-    model = models.PhotographFeatureMaterialCollectedOther
-    extra = inline_extra_default
-    classes = [inline_view_default]
+    fields = ('material', 'image', 'caption', 'date', 'photographer')
 
 
 class GridSquareInline(admin.StackedInline):
@@ -282,17 +219,99 @@ class FlaggedItemInline(admin.StackedInline):
 class SurveyRecordAdminView(GenericAdminView):
     """ Customise the admin interface for SurveyRecord model """
 
-    list_display = ('id', 'survey_unit',)
+    list_display = ('id', 'survey_unit_id',)
     list_display_links = ('id',)
-    search_fields = ('survey_unit',)
+    search_fields = ('survey_unit_id',)
     inlines = (
-        SurveyMaterialCountedInline,
-        SurveyMaterialCollectedInline,
-        PhotographSurveyMaterialBagsCollectedPotteryInline,
-        PhotographSurveyMaterialBagsCollectedTileInline,PhotographSurveyMaterialBagsCollectedLithicInline,
-        PhotographSurveyMaterialBagsCollectedOtherInline,
+        SurveyUnitMaterialsCountedAndCollectedInline,
+        PhotographSurveyUnitMaterialBagsCollectedInline,
         PhotographSurveyRecordInline
     )
+    fieldsets = [
+        (
+            None,
+            {
+                'fields': [
+                    'survey_unit_id',
+                    'scribe',
+                    'date',
+                    'time',
+                    'number_of_walkers',
+                    'spacing',
+                    'bearing',
+                    'visibility_percentage',
+                    'soil',
+                    'survey_unit_metadata_notes',
+                ],
+            },
+        ),
+        (
+            'Current Land Use',
+            {
+                'fields': [
+                    'land_use',
+                    'land_use_notes',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Current Land Use: Cultivation',
+            {
+                'fields': [(
+                    'cultivation_grain',
+                    'cultivation_fruits',
+                    'cultivation_vegetables',
+                    'cultivation_olive',
+                    'cultivation_vine',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Current Land Use: Uncultivated',
+            {
+                'fields': [(
+                    'uncultivated_fallowland',
+                    'uncultivated_wetland',
+                    'uncultivated_scrubland',
+                    'uncultivated_forest',
+                    'uncultivated_pasture',
+                    'uncultivated_rocky',
+                    'uncultivated_abandoned',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Survey Unit Materials Bags Collected',
+            {
+                'fields': [(
+                    'survey_material_bags_collected_pottery',
+                    'survey_material_bags_collected_tile',
+                    'survey_material_bags_collected_lithic',
+                    'survey_material_bags_collected_other',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Survey Unit Materials Observations',
+            {
+                'fields': [(
+                    'survey_unit_materials_observations',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+    ]
+
+    class Media:
+        js = (
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js',
+            'js/admin/main.js',
+            'js/admin/survey_record.js',
+        )
 
 
 @admin.register(models.Feature)
@@ -304,11 +323,56 @@ class FeatureAdminView(GenericAdminView):
     search_fields = ('feature_id',)
     inlines = (
         PhotographFeatureInline,
-        PhotographFeatureMaterialCollectedPotteryInline,
-        PhotographFeatureMaterialCollectedTileInline,
-        PhotographFeatureMaterialCollectedLithicInline,
-        PhotographFeatureMaterialCollectedOtherInline,
+        PhotographFeatureMaterialCollectedInline,
     )
+    fieldsets = [
+        (
+            None,
+            {
+                'fields': [
+                    'feature_id',
+                    'feature_type',
+                    'feature_description',
+                    'survey_unit',
+                    'coordinates_recorded',
+                    'location_description',
+                    ('dimensions_length_cm', 'dimensions_width_cm', 'dimensions_height_cm'),
+                    'feature_condition',
+                    'sketch',
+                    'feature_metadata_notes',
+                ],
+            },
+        ),
+        (
+            'Material Collected Around Feature',
+            {
+                'fields': [(
+                    'material_collected_pottery_quantity',
+                    'material_collected_pottery_bags',
+                ),
+                (
+                    'material_collected_tile_quantity',
+                    'material_collected_tile_bags',
+                ),
+                (
+                    'material_collected_lithic_quantity',
+                    'material_collected_lithic_bags',
+                ),
+                (
+                    'material_collected_other_quantity',
+                    'material_collected_other_bags',
+                )],
+                'classes': ('collapse',),
+            }
+        )
+    ]
+
+    class Media:
+        js = (
+            'https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js',
+            'js/admin/main.js',
+            'js/admin/feature.js',
+        )
 
 
 @admin.register(models.GriddedCollection)
@@ -322,6 +386,56 @@ class GriddedCollectionAdminView(GenericAdminView):
         GridSquareInline,
         PhotographGriddedCollectionInline
     )
+    fieldsets = [
+        (
+            None,
+            {
+                'fields': [
+                    'grid_id',
+                    'grid_size',
+                    'soil',
+                    'grid_metadata_notes',
+                ],
+            },
+        ),
+        (
+            'Current Land Use',
+            {
+                'fields': [
+                    'land_use',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Current Land Use: Cultivation',
+            {
+                'fields': [(
+                    'cultivation_grain',
+                    'cultivation_fruits',
+                    'cultivation_vegetables',
+                    'cultivation_olive',
+                    'cultivation_vine',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Current Land Use: Uncultivated',
+            {
+                'fields': [(
+                    'uncultivated_fallowland',
+                    'uncultivated_wetland',
+                    'uncultivated_scrubland',
+                    'uncultivated_forest',
+                    'uncultivated_pasture',
+                    'uncultivated_rocky',
+                    'uncultivated_abandoned',
+                )],
+                'classes': ('collapse',),
+            },
+        ),
+    ]
 
 
 @admin.register(models.BulkMaterial)
@@ -356,3 +470,121 @@ class SpecialistStudyAdminView(GenericAdminView):
     list_display = ('id', 'study_id',)
     list_display_links = ('id',)
     search_fields = ('study_id',)
+
+    fieldsets = [
+        (
+            None,
+            {
+                'fields': [
+                    'study_id',
+                    'specialist',
+                    'date',
+                    'bulk_material',
+                    'flagged_item',
+                    'material_type',
+                    'storage_location',
+                ],
+            },
+        ),
+        (
+            'Item Attributes: Pottery',
+            {
+                'fields': [
+                    'pottery_object_type',
+                    'pottery_fabric',
+                    'pottery_decoration_technique',
+                    'pottery_manufacture_technique',
+                    'pottery_shape',
+                    'pottery_fabric_description',
+                    'pottery_flag_for_drawing',
+                    'pottery_flag_for_photography',
+                    'pottery_flag_for_sampling',
+                    'pottery_rim_diameter',
+                    'pottery_base_diameter',
+                    'pottery_general_dimensions',
+                    'pottery_weight',
+                    'pottery_start_period',
+                    'pottery_end_period',
+                    'pottery_chronological_certainty',
+                    'pottery_comparanda',
+                    'pottery_for_publication',
+                    'pottery_notes',
+                    'pottery_item_returned_to_bulk',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Item Attributes: Tile',
+            {
+                'fields': [
+                    'tile_object_type',
+                    'tile_fabric',
+                    'tile_type',
+                    'tile_part',
+                    'tile_general_dimensions',
+                    'tile_weight',
+                    'tile_flag_for_drawing',
+                    'tile_flag_for_photography',
+                    'tile_flag_for_sampling',
+                    'tile_start_period',
+                    'tile_end_period',
+                    'tile_chronological_certainty',
+                    'tile_comparanda',
+                    'tile_for_publication',
+                    'tile_notes',
+                    'tile_item_returned_to_bulk',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Item Attributes: Lithic',
+            {
+                'fields': [
+                    'lithics_object_type',
+                    'lithics_material',
+                    'lithics_classification',
+                    'lithics_general_dimensions',
+                    'lithics_weight',
+                    'lithics_flag_for_drawing',
+                    'lithics_flag_for_photography',
+                    'lithics_flag_for_sampling',
+                    'lithics_start_period',
+                    'lithics_end_period',
+                    'lithics_chronological_certainty',
+                    'lithics_comparanda',
+                    'lithics_for_publication',
+                    'lithics_notes',
+                    'lithics_item_returned_to_bulk',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
+            'Item Attributes: Other',
+            {
+                'fields': [
+                    'other_object_type',
+                    'other_material_or_fabric',
+                    'other_material_or_fabric_description',
+                    'other_general_dimensions',
+                    'other_weight',
+                    'other_flag_for_drawing',
+                    'other_flag_for_photography',
+                    'other_flag_for_sampling',
+                    'other_decoration',
+                    'other_descoration_description',
+                    'other_manufacture',
+                    'other_start_period',
+                    'other_end_period',
+                    'other_chronological_certainty',
+                    'other_comparanda',
+                    'other_for_publication',
+                    'other_notes',
+                    'other_item_returned_to_bulk',
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+    ]
