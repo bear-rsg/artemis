@@ -57,19 +57,85 @@ def insert_data(apps, schema_editor):
         models.GridSize.objects.create(name=name, order=order)
 
     # BulkMaterialSourceType
+    for order, name in enumerate(['not started', 'in progress', 'completed']):
+        models.BulkMaterialSourceType.objects.create(name=name, order=order)
+
+    # BulkMaterialProcessingStatus
     for name in ['survey unit', 'feature', 'grid square']:
-        models.BulkMaterialSourceType.objects.create(name=name)
+        models.BulkMaterialProcessingStatus.objects.create(name=name)
+
+    # PotteryMaterial
+    for name in ['clay', 'tile', 'other']:
+        models.PotteryMaterial.objects.create(name=name)
+
+    # Function
+    for name in [
+        'transport',
+        'storage',
+        'easting',
+        'drinking',
+        'serving',
+        'cooking',
+        'processing',
+        'agricultural',
+        'rooking',
+        'architectural',
+        'ritual',
+        'toilet',
+        'other household'
+    ]:
+        models.Function.objects.create(name=name)
+
+    # Part
+    for name in [
+        'rim',
+        'body',
+        'base',
+        'handle',
+        'combined rim/handle',
+        'combine rim/handle/body',
+        'spout',
+        'stem',
+        'other'
+    ]:
+        models.Part.objects.create(name=name)
+
+    # TimePeriod
+    for order, name in enumerate([
+        'Early Neolithic',
+        'Mid Neolithic',
+        'Late Neolithic',
+        'Early Bronze Age,Mid Bronze Age,Late Helladic (Mycenaean)',
+        'ProtoGeometric',
+        'Middle Geometric',
+        'Late Geometric',
+        'Early Archaic',
+        'Mid Archaic',
+        'Late Archaic Early Classical',
+        'Mid Classica',
+        'Late Classical',
+        'Hellenistic',
+        'Early Roman',
+        'Mid Roman',
+        'Late Roman',
+        'Early Christian',
+        'Byzantine',
+        'Venetian',
+        'Ottoman',
+        'Early/Modern'
+    ]):
+        models.TimePeriod.objects.create(name=name, order=order)
 
     # FlaggedItemStatus
     for name in ['pending study', 'under study', 'completed', 'returned']:
         models.FlaggedItemStatus.objects.create(name=name)
 
-    # Fabric
-    for name in ['coarse', 'cooking', 'semi-coarse', 'fine']:
-        models.Fabric.objects.create(name=name)
+    # Texture
+    for name in ['coarse', 'cooking', 'semi-coarse', 'fine', 'medium']:
+        models.Texture.objects.create(name=name)
 
     # PotteryManufactureTechnique
-    for name in ['hand-made', 'wheel-made', 'mould-made']:
+    for name in ['handmade', 'wheelmade', 'mouldmade']:
         models.PotteryManufactureTechnique.objects.create(name=name)
 
     # ChronologicalCertainty

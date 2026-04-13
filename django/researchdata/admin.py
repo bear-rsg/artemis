@@ -76,8 +76,13 @@ admin.site.register(models.FeatureCondition, HiddenGenericAdminView)
 admin.site.register(models.MaterialType, HiddenGenericAdminView)
 admin.site.register(models.GridSize, HiddenGenericAdminView)
 admin.site.register(models.BulkMaterialSourceType, HiddenGenericAdminView)
+admin.site.register(models.BulkMaterialProcessingStatus, HiddenGenericAdminView)
+admin.site.register(models.PotteryMaterial, HiddenGenericAdminView)
+admin.site.register(models.Function, HiddenGenericAdminView)
+admin.site.register(models.Part, HiddenGenericAdminView)
+admin.site.register(models.TimePeriod, HiddenGenericAdminView)
 admin.site.register(models.FlaggedItemStatus, HiddenGenericAdminView)
-admin.site.register(models.Fabric, HiddenGenericAdminView)
+admin.site.register(models.Texture, HiddenGenericAdminView)
 admin.site.register(models.PotteryManufactureTechnique, HiddenGenericAdminView)
 admin.site.register(models.ChronologicalCertainty, HiddenGenericAdminView)
 admin.site.register(models.TileType, HiddenGenericAdminView)
@@ -199,6 +204,15 @@ class PhotographGriddedCollectionInline(admin.TabularInline):
     A subform/inline form for PhotographGriddedCollection
     """
     model = models.PhotographGriddedCollection
+    extra = inline_extra_default
+    classes = [inline_view_default]
+
+
+class BulkMaterialBatchInline(admin.StackedInline):
+    """
+    A subform/inline form for FlaggeBulkMaterialBatchdItem
+    """
+    model = models.BulkMaterialBatch
     extra = inline_extra_default
     classes = [inline_view_default]
 
@@ -445,7 +459,7 @@ class BulkMaterialAdminView(GenericAdminView):
     list_display = ('id', 'bulk_material_id',)
     list_display_links = ('id',)
     search_fields = ('bulk_material_id',)
-    inlines = (FlaggedItemInline,)
+    inlines = (BulkMaterialBatchInline, FlaggedItemInline,)
 
 
 @admin.register(models.FlaggedItem)
@@ -480,7 +494,7 @@ class SpecialistStudyAdminView(GenericAdminView):
                     'specialist',
                     'date',
                     'bulk_material',
-                    'flagged_item',
+                    'lot_number',
                     'material_type',
                     'storage_location',
                 ],
@@ -490,7 +504,9 @@ class SpecialistStudyAdminView(GenericAdminView):
             'Item Attributes: Pottery',
             {
                 'fields': [
-                    'pottery_object_type',
+                    'pottery_part',
+                    'pottery_material',
+                    'pottery_texture',
                     'pottery_fabric',
                     'pottery_decoration_technique',
                     'pottery_manufacture_technique',
@@ -502,7 +518,7 @@ class SpecialistStudyAdminView(GenericAdminView):
                     'pottery_rim_diameter',
                     'pottery_base_diameter',
                     'pottery_general_dimensions',
-                    'pottery_weight',
+                    'pottery_weight_grams',
                     'pottery_start_period',
                     'pottery_end_period',
                     'pottery_chronological_certainty',

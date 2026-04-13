@@ -49,7 +49,7 @@ class PhotographModelAbstract(models.Model):
     photographer = models.ForeignKey('TeamMember', on_delete=models.RESTRICT, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.image.name
 
     class Meta:
         abstract = True
@@ -95,8 +95,28 @@ class GridSize(CustomOrderSimpleModelAbstract):
     """ Sizes of grids used in GriddedCollection """
 
 
-class BulkMaterialSourceType(SimpleModelAbstract):
+class BulkMaterialSourceType(CustomOrderSimpleModelAbstract):
     """ Types of sources within BulkMaterial """
+
+
+class BulkMaterialProcessingStatus(SimpleModelAbstract):
+    """ Statuses of process of BulkMaterial """
+
+
+class PotteryMaterial(SimpleModelAbstract):
+    """ Materials used in pottery """
+
+
+class Function(SimpleModelAbstract):
+    """ The function/purpose of a BulkMaterialBatch, e.g. transport, storage, easting, drinking """
+
+
+class Part(SimpleModelAbstract):
+    """ The part a BulkMaterialBatch, e.g. rim, body, base """
+
+
+class TimePeriod(CustomOrderSimpleModelAbstract):
+    """ A period of time, e.g. Early Neolithic, Mid Neolithic, Late Neolithic, etc. """
 
 
 class FlaggedItemStatus(SimpleModelAbstract):
@@ -107,7 +127,7 @@ class FlaggedItemStatus(SimpleModelAbstract):
         verbose_name_plural = 'flagged item statuses'
 
 
-class Fabric(SimpleModelAbstract):
+class Texture(SimpleModelAbstract):
     """ A type of fabric, e.g. cooking, coarse, semi-coarse, fine """
 
 
@@ -426,22 +446,26 @@ class BulkMaterial(models.Model):
 
     related_name = 'bulk_materials'
 
-    # 1. Bulk Material Metadata
+    # 1. Bulk Material Observations
     bulk_material_id = models.CharField(max_length=1000, unique=True, db_index=True)
     source_type = models.ForeignKey(BulkMaterialSourceType, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     source_id = models.CharField(max_length=1000, blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
-    processed_by = models.ForeignKey(TeamMember, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
+    date_batch_created = models.DateField(blank=True, null=True)
+    date_of_collection = models.DateField(blank=True, null=True)
+    processed_by = models.ForeignKey(TeamMember, related_name=f'{related_name}_processed_by', on_delete=models.RESTRICT, blank=True, null=True)
+    checked_by = models.ForeignKey(TeamMember, related_name=f'{related_name}_checked_by', on_delete=models.RESTRICT, blank=True, null=True)
+    checked_by = models.ForeignKey(BulkMaterialProcessingStatus, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     storage_location = models.TextField(blank=True, null=True)
+    total_sherd_count = models.IntegerField(blank=True, null=True)
     material_type = models.ForeignKey(MaterialType, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     quantity = models.IntegerField(blank=True, null=True)
-    weight = models.TextField(blank=True, null=True)
+    weight = models.TextField(blank=True, null=True, verbose_name='weight (g)')
     bulk_photograph = models.ImageField(upload_to='researchdata-photographs', blank=True, null=True)
     bulk_observations = models.TextField(blank=True, null=True)
-    flagged_for_study = models.BooleanField(default=False)
-    flagged_for_study_reason = models.TextField(blank=True, null=True)
 
-    # 2. Flagged Items - see FlaggedItem model
+    # 2. Batches - see BulkMaterialBatch model
+
+    # 3. Flagged Items - see FlaggedItem model
 
     def __str__(self):
         return self.bulk_material_id
@@ -449,6 +473,36 @@ class BulkMaterial(models.Model):
     class Meta:
         ordering = ['-id',]
         verbose_name_plural = '4. Bulk Material'
+
+
+class BulkMaterialBatch(models.Model):
+    """
+    Batch subform of Bulk Material main form
+    """
+
+    related_name = 'bulk_material_batches'
+
+    bulk_material = models.ForeignKey(BulkMaterial, related_name=related_name, on_delete=models.RESTRICT)
+    lot_number = models.CharField(max_length=1000, blank=True, null=True)
+    quantity = models.IntegerField(blank=True, null=True)
+    material = models.ForeignKey(PotteryMaterial, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    technique = models.ForeignKey(PotteryManufactureTechnique, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    texture = models.ForeignKey(Texture, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    fabric = models.CharField(max_length=1000, blank=True, null=True)
+    function = models.ForeignKey(Function, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    part = models.ForeignKey(Part, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    shape = models.CharField(max_length=1000, blank=True, null=True)
+    start_period = models.ForeignKey(TimePeriod, related_name=f'{related_name}_start_period', on_delete=models.SET_NULL, blank=True, null=True)
+    end_period = models.ForeignKey(TimePeriod, related_name=f'{related_name}_end_period', on_delete=models.SET_NULL, blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    catalogue = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'bulk material batch #{self.id}'
+
+    class Meta:
+        ordering = ['-id',]
+        verbose_name_plural = 'bulk material batches'
 
 
 class FlaggedItem(models.Model):
@@ -486,15 +540,18 @@ class SpecialistStudy(models.Model):
     specialist = models.CharField(max_length=1000, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     bulk_material = models.ForeignKey(BulkMaterial, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
-    flagged_item = models.ForeignKey(FlaggedItem, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
+    lot_number = models.ForeignKey(FlaggedItem, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     material_type = models.ForeignKey(MaterialType, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     storage_location = models.CharField(max_length=1000, blank=True, null=True)
 
     # 2. Item Attributes
 
     # 2a. Pottery
-    pottery_object_type = models.CharField(max_length=1000, blank=True, null=True)
-    pottery_fabric = models.ForeignKey(Fabric, related_name=f'{related_name}_pottery', on_delete=models.RESTRICT, blank=True, null=True)
+    pottery_part = models.ForeignKey(Part, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    pottery_material = models.ForeignKey(PotteryMaterial, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
+    pottery_texture = models.ForeignKey(Texture, related_name=f'{related_name}_pottery_texture', on_delete=models.SET_NULL, blank=True, null=True)
+    pottery_fabric = models.CharField(max_length=1000, blank=True, null=True)
+    function = models.ForeignKey(Function, related_name=related_name, on_delete=models.SET_NULL, blank=True, null=True)
     pottery_decoration_technique = models.CharField(max_length=1000, blank=True, null=True)
     pottery_manufacture_technique = models.ForeignKey(PotteryManufactureTechnique, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     pottery_shape = models.CharField(max_length=1000, blank=True, null=True)
@@ -505,9 +562,9 @@ class SpecialistStudy(models.Model):
     pottery_rim_diameter = models.CharField(max_length=1000, blank=True, null=True)
     pottery_base_diameter = models.CharField(max_length=1000, blank=True, null=True)
     pottery_general_dimensions = models.CharField(max_length=1000, blank=True, null=True)
-    pottery_weight = models.CharField(max_length=1000, blank=True, null=True)
-    pottery_start_period = models.CharField(max_length=1000, blank=True, null=True)
-    pottery_end_period = models.CharField(max_length=1000, blank=True, null=True)
+    pottery_weight_grams = models.IntegerField(blank=True, null=True)
+    pottery_start_period = models.ForeignKey(TimePeriod, related_name=f'{related_name}_start_period', on_delete=models.SET_NULL, blank=True, null=True)
+    pottery_end_period = models.ForeignKey(TimePeriod, related_name=f'{related_name}_end_period', on_delete=models.SET_NULL, blank=True, null=True)
     pottery_chronological_certainty = models.ForeignKey(ChronologicalCertainty, related_name=f'{related_name}_pottery', on_delete=models.RESTRICT, blank=True, null=True)
     pottery_comparanda = models.CharField(max_length=1000, blank=True, null=True)
     pottery_for_publication = models.BooleanField(default=False)
@@ -516,7 +573,7 @@ class SpecialistStudy(models.Model):
 
     # 2b. Tile
     tile_object_type = models.CharField(max_length=1000, blank=True, null=True)
-    tile_fabric = models.ForeignKey(Fabric, related_name=f'{related_name}_tile', on_delete=models.RESTRICT, blank=True, null=True)
+    tile_fabric = models.ForeignKey(Texture, related_name=f'{related_name}_tile_frabic', on_delete=models.RESTRICT, blank=True, null=True)
     tile_type = models.ForeignKey(TileType, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
     tile_part = models.CharField(max_length=1000, blank=True, null=True)
     tile_general_dimensions = models.CharField(max_length=1000, blank=True, null=True)
