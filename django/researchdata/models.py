@@ -233,15 +233,16 @@ class SurveyRecord(models.Model):
     survey_unit_metadata_notes = models.TextField(blank=True, null=True)
 
     # 2. Current Land Use
-    land_use = models.ForeignKey(LandUse, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
-    land_use_notes = models.TextField(blank=True, null=True)
-    # A. Cultivation
-    cultivation_grain = models.BooleanField(default=False, verbose_name='grain/cereals')
-    cultivation_fruits = models.BooleanField(default=False, verbose_name='fruits')
-    cultivation_vegetables = models.BooleanField(default=False, verbose_name='vegetables')
-    cultivation_olive = models.BooleanField(default=False, verbose_name='olive')
-    cultivation_vine = models.BooleanField(default=False, verbose_name='vine')
+    # A. Cultivated
+    cultivated = models.BooleanField(default=False)
+    cultivated_grain = models.BooleanField(default=False, verbose_name='grain/cereals')
+    cultivated_fruits = models.BooleanField(default=False, verbose_name='fruits')
+    cultivated_vegetables = models.BooleanField(default=False, verbose_name='vegetables')
+    cultivated_olive = models.BooleanField(default=False, verbose_name='olive')
+    cultivated_vine = models.BooleanField(default=False, verbose_name='vine')
+    cultivated_notes = models.TextField(blank=True, null=True)
     # B. Uncultivated
+    uncultivated = models.BooleanField(default=False)
     uncultivated_fallowland = models.BooleanField(default=False, verbose_name='fallow land')
     uncultivated_wetland = models.BooleanField(default=False, verbose_name='wetland/marsh')
     uncultivated_scrubland = models.BooleanField(default=False, verbose_name='scrubland/maquis/garrigue')
@@ -249,6 +250,7 @@ class SurveyRecord(models.Model):
     uncultivated_pasture = models.BooleanField(default=False, verbose_name='natural pasture/grazing land')
     uncultivated_rocky = models.BooleanField(default=False, verbose_name='rocky/barren ground')
     uncultivated_abandoned = models.BooleanField(default=False, verbose_name='abandoned agricultural land')
+    uncultivated_notes = models.TextField(blank=True, null=True)
 
     # 3. Survey Unit Materials
     # A. Materials Counted and Collected
@@ -376,12 +378,12 @@ class GriddedCollection(models.Model):
 
     # 2. Land Use
     land_use = models.ForeignKey(LandUse, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
-    # A. Cultivation
-    cultivation_grain = models.BooleanField(default=False, verbose_name='grain/cereals')
-    cultivation_fruits = models.BooleanField(default=False, verbose_name='fruits')
-    cultivation_vegetables = models.BooleanField(default=False, verbose_name='vegetables')
-    cultivation_olive = models.BooleanField(default=False, verbose_name='olive')
-    cultivation_vine = models.BooleanField(default=False, verbose_name='vine')
+    # A. Cultivated
+    cultivated_grain = models.BooleanField(default=False, verbose_name='grain/cereals')
+    cultivated_fruits = models.BooleanField(default=False, verbose_name='fruits')
+    cultivated_vegetables = models.BooleanField(default=False, verbose_name='vegetables')
+    cultivated_olive = models.BooleanField(default=False, verbose_name='olive')
+    cultivated_vine = models.BooleanField(default=False, verbose_name='vine')
     # B. Uncultivated
     uncultivated_fallowland = models.BooleanField(default=False, verbose_name='fallow land')
     uncultivated_wetland = models.BooleanField(default=False, verbose_name='wetland/marsh')

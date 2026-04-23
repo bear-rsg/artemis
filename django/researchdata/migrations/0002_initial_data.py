@@ -72,13 +72,12 @@ def insert_data(apps, schema_editor):
     for name in [
         'transport',
         'storage',
-        'easting',
+        'eating',
         'drinking',
         'serving',
         'cooking',
         'processing',
         'agricultural',
-        'rooking',
         'architectural',
         'ritual',
         'toilet',
@@ -105,14 +104,17 @@ def insert_data(apps, schema_editor):
         'Early Neolithic',
         'Mid Neolithic',
         'Late Neolithic',
-        'Early Bronze Age,Mid Bronze Age,Late Helladic (Mycenaean)',
+        'Early Bronze Age',
+        'Mid Bronze Age',
+        'Late Helladic (Mycenaean)',
         'ProtoGeometric',
         'Middle Geometric',
         'Late Geometric',
         'Early Archaic',
         'Mid Archaic',
-        'Late Archaic Early Classical',
-        'Mid Classica',
+        'Late Archaic',
+        'Early Classical',
+        'Mid Classical',
         'Late Classical',
         'Hellenistic',
         'Early Roman',
@@ -122,7 +124,7 @@ def insert_data(apps, schema_editor):
         'Byzantine',
         'Venetian',
         'Ottoman',
-        'Early/Modern'
+        'Early Modern'
     ]):
         models.TimePeriod.objects.create(name=name, order=order)
 

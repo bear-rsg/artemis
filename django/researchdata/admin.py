@@ -6,6 +6,10 @@ from . import models
 # Reusable code
 
 
+inline_extra_default = 1
+inline_view_default = 'collapse'
+
+
 def get_manytomany_fields(model, exclude=[]):
     """
     Returns a list of strings containing the field names of many to many fields of a model
@@ -63,6 +67,23 @@ class HiddenGenericAdminView(GenericAdminView):
         return {}
 
 
+class GenericAdminStackedInline(admin.StackedInline):
+    """
+    This is a generic base class for StackedInline subforms
+    It should be inherited via an inline, e.g. class ManuscriptInline(GenericAdminStackedInline)
+    """
+
+    extra = inline_extra_default
+    classes = ['collapse']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all many to many fields to display the filter_horizontal widget
+        self.filter_horizontal = get_manytomany_fields(self.model)
+        # Set all foreign key fields to display the autocomplete widget
+        self.autocomplete_fields = get_foreignkey_fields(self.model)
+
+
 # Simple ModelAdmins
 
 
@@ -89,10 +110,6 @@ admin.site.register(models.TileType, HiddenGenericAdminView)
 
 
 # Inlines
-
-
-inline_extra_default = 1
-inline_view_default = 'collapse'
 
 
 class SurveyUnitMaterialsCountedAndCollectedInline(admin.TabularInline):
@@ -142,7 +159,7 @@ class PhotographFeatureMaterialCollectedInline(admin.TabularInline):
     fields = ('material', 'image', 'caption', 'date', 'photographer')
 
 
-class GridSquareInline(admin.StackedInline):
+class GridSquareInline(GenericAdminStackedInline):
     """
     A subform/inline form for GridSquare
     """
@@ -208,7 +225,7 @@ class PhotographGriddedCollectionInline(admin.TabularInline):
     classes = [inline_view_default]
 
 
-class BulkMaterialBatchInline(admin.StackedInline):
+class BulkMaterialBatchInline(GenericAdminStackedInline):
     """
     A subform/inline form for FlaggeBulkMaterialBatchdItem
     """
@@ -217,7 +234,7 @@ class BulkMaterialBatchInline(admin.StackedInline):
     classes = [inline_view_default]
 
 
-class FlaggedItemInline(admin.StackedInline):
+class FlaggedItemInline(GenericAdminStackedInline):
     """
     A subform/inline form for FlaggedItem
     """
@@ -234,8 +251,8 @@ class SurveyRecordAdminView(GenericAdminView):
     """ Customise the admin interface for SurveyRecord model """
 
     list_display = ('id', 'survey_unit_id',)
-    list_display_links = ('id',)
-    search_fields = ('survey_unit_id',)
+    list_display_links = ('id', 'survey_unit_id')
+    search_fields = ('id', 'survey_unit_id',)
     inlines = (
         SurveyUnitMaterialsCountedAndCollectedInline,
         PhotographSurveyUnitMaterialBagsCollectedInline,
@@ -260,40 +277,34 @@ class SurveyRecordAdminView(GenericAdminView):
             },
         ),
         (
-            'Current Land Use',
+            'Current Land Use: Cultivated',
             {
                 'fields': [
-                    'land_use',
-                    'land_use_notes',
+                    'cultivated',
+                    ('cultivated_grain',
+                    'cultivated_fruits',
+                    'cultivated_vegetables',
+                    'cultivated_olive',
+                    'cultivated_vine'),
+                    'cultivated_notes'
                 ],
-                'classes': ('collapse',),
-            },
-        ),
-        (
-            'Current Land Use: Cultivation',
-            {
-                'fields': [(
-                    'cultivation_grain',
-                    'cultivation_fruits',
-                    'cultivation_vegetables',
-                    'cultivation_olive',
-                    'cultivation_vine',
-                )],
                 'classes': ('collapse',),
             },
         ),
         (
             'Current Land Use: Uncultivated',
             {
-                'fields': [(
-                    'uncultivated_fallowland',
+                'fields': [
+                    'uncultivated',
+                    ('uncultivated_fallowland',
                     'uncultivated_wetland',
                     'uncultivated_scrubland',
                     'uncultivated_forest',
                     'uncultivated_pasture',
                     'uncultivated_rocky',
-                    'uncultivated_abandoned',
-                )],
+                    'uncultivated_abandoned'),
+                    'uncultivated_notes'
+                ],
                 'classes': ('collapse',),
             },
         ),
@@ -333,8 +344,8 @@ class FeatureAdminView(GenericAdminView):
     """ Customise the admin interface for Feature model """
 
     list_display = ('id', 'feature_id',)
-    list_display_links = ('id',)
-    search_fields = ('feature_id',)
+    list_display_links = ('id', 'feature_id',)
+    search_fields = ('id', 'feature_id',)
     inlines = (
         PhotographFeatureInline,
         PhotographFeatureMaterialCollectedInline,
@@ -394,8 +405,8 @@ class GriddedCollectionAdminView(GenericAdminView):
     """ Customise the admin interface for GriddedCollection model """
 
     list_display = ('id', 'grid_id',)
-    list_display_links = ('id',)
-    search_fields = ('grid_id',)
+    list_display_links = ('id', 'grid_id',)
+    search_fields = ('id', 'grid_id',)
     inlines = (
         GridSquareInline,
         PhotographGriddedCollectionInline
@@ -422,14 +433,14 @@ class GriddedCollectionAdminView(GenericAdminView):
             },
         ),
         (
-            'Current Land Use: Cultivation',
+            'Current Land Use: Cultivated',
             {
                 'fields': [(
-                    'cultivation_grain',
-                    'cultivation_fruits',
-                    'cultivation_vegetables',
-                    'cultivation_olive',
-                    'cultivation_vine',
+                    'cultivated_grain',
+                    'cultivated_fruits',
+                    'cultivated_vegetables',
+                    'cultivated_olive',
+                    'cultivated_vine',
                 )],
                 'classes': ('collapse',),
             },
@@ -457,8 +468,8 @@ class BulkMaterialAdminView(GenericAdminView):
     """ Customise the admin interface for BulkMaterial model """
 
     list_display = ('id', 'bulk_material_id',)
-    list_display_links = ('id',)
-    search_fields = ('bulk_material_id',)
+    list_display_links = ('id', 'bulk_material_id',)
+    search_fields = ('id', 'bulk_material_id',)
     inlines = (BulkMaterialBatchInline, FlaggedItemInline,)
 
 
@@ -467,8 +478,8 @@ class FlaggedItemAdminView(GenericAdminView):
     """ Customise the admin interface for FlaggedItem model """
 
     list_display = ('id', 'flagged_item_id',)
-    list_display_links = ('id',)
-    search_fields = ('flagged_item_id',)
+    list_display_links = ('id', 'flagged_item_id',)
+    search_fields = ('id', 'flagged_item_id',)
 
     def get_model_perms(self, request):
         """
@@ -482,8 +493,8 @@ class SpecialistStudyAdminView(GenericAdminView):
     """ Customise the admin interface for SpecialistStudy model """
 
     list_display = ('id', 'study_id',)
-    list_display_links = ('id',)
-    search_fields = ('study_id',)
+    list_display_links = ('id', 'study_id',)
+    search_fields = ('id', 'study_id',)
 
     fieldsets = [
         (
