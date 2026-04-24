@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section>
+    <h2>Downloads</h2>
+
+    <h3>Database template spreadsheet</h3>
+    <p>
+        The database template spreadsheet is an Excel file containing a worksheet for each table in the database. Each worksheet includes a single header row for all fields within that table. This template spreadsheet can be used to record data if the live database is ever unavailable, e.g. if you're working offline. Then when you're able to access the live database again (e.g. when you have an internet connection) you can input the data from this spreadsheet into the database.
+    </p>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-dbtemplateexcel' %}">
+        <i class="fa-solid fa-circle-down"></i> Download database template spreadsheet
+    </a>
+
+    <h3>Database data</h3>
+    <p>
+        You can export data for each of the main tables of the database in CSV format by clicking the buttons below:
+    </p>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=SurveyRecord">
+        <i class="fa-solid fa-circle-down"></i> Download Survey Record data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=Feature">
+        <i class="fa-solid fa-circle-down"></i> Download Feature data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=GriddedCollection">
+        <i class="fa-solid fa-circle-down"></i> Download Gridded Collection data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=GridSquare">
+        <i class="fa-solid fa-circle-down"></i> Download Grid Square data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=BulkMaterial">
+        <i class="fa-solid fa-circle-down"></i> Download Bulk Material data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=FlaggedItem">
+        <i class="fa-solid fa-circle-down"></i> Download Flagged Item data
+    </a>
+    <a class="downloads-downloadlink" href="{% url 'researchdata:downloads-modeldatacsv' %}?model=SpecialistStudy">
+        <i class="fa-solid fa-circle-down"></i> Download Specialist Study data
+    </a>
+    
+</section>
+
+{% endblock %}
