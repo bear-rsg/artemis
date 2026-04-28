@@ -518,7 +518,6 @@ class SpecialistStudyAdminView(GenericAdminView):
                     'pottery_part',
                     'pottery_material',
                     'pottery_texture',
-                    'pottery_fabric',
                     'pottery_decoration_technique',
                     'pottery_manufacture_technique',
                     'pottery_shape',

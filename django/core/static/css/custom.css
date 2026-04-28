@@ -205,6 +205,12 @@ section#welcome-banner h2 {
     padding: 0.3em 0.5em;
 }
 
+#welcome-logos {
+    display: block;
+    margin-top: 3em;
+    max-width: 100%;
+}
+
 /* ---------- Downloads ---------- */
 
 .downloads-downloadlink {
