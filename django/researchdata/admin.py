@@ -281,11 +281,13 @@ class SurveyRecordAdminView(GenericAdminView):
             {
                 'fields': [
                     'cultivated',
-                    ('cultivated_grain',
-                    'cultivated_fruits',
-                    'cultivated_vegetables',
-                    'cultivated_olive',
-                    'cultivated_vine'),
+                    (
+                        'cultivated_grain',
+                        'cultivated_fruits',
+                        'cultivated_vegetables',
+                        'cultivated_olive',
+                        'cultivated_vine'
+                    ),
                     'cultivated_notes'
                 ],
                 'classes': ('collapse',),
@@ -296,13 +298,15 @@ class SurveyRecordAdminView(GenericAdminView):
             {
                 'fields': [
                     'uncultivated',
-                    ('uncultivated_fallowland',
-                    'uncultivated_wetland',
-                    'uncultivated_scrubland',
-                    'uncultivated_forest',
-                    'uncultivated_pasture',
-                    'uncultivated_rocky',
-                    'uncultivated_abandoned'),
+                    (
+                        'uncultivated_fallowland',
+                        'uncultivated_wetland',
+                        'uncultivated_scrubland',
+                        'uncultivated_forest',
+                        'uncultivated_pasture',
+                        'uncultivated_rocky',
+                        'uncultivated_abandoned'
+                    ),
                     'uncultivated_notes'
                 ],
                 'classes': ('collapse',),
@@ -371,22 +375,24 @@ class FeatureAdminView(GenericAdminView):
         (
             'Material Collected Around Feature',
             {
-                'fields': [(
-                    'material_collected_pottery_quantity',
-                    'material_collected_pottery_bags',
-                ),
-                (
-                    'material_collected_tile_quantity',
-                    'material_collected_tile_bags',
-                ),
-                (
-                    'material_collected_lithic_quantity',
-                    'material_collected_lithic_bags',
-                ),
-                (
-                    'material_collected_other_quantity',
-                    'material_collected_other_bags',
-                )],
+                'fields': [
+                    (
+                        'material_collected_pottery_quantity',
+                        'material_collected_pottery_bags',
+                    ),
+                    (
+                        'material_collected_tile_quantity',
+                        'material_collected_tile_bags',
+                    ),
+                    (
+                        'material_collected_lithic_quantity',
+                        'material_collected_lithic_bags',
+                    ),
+                    (
+                        'material_collected_other_quantity',
+                        'material_collected_other_bags',
+                    )
+                ],
                 'classes': ('collapse',),
             }
         )
