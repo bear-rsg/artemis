@@ -158,6 +158,7 @@ class PhotographSurveyRecord(PhotographModelAbstract):
         related_name='photograph_survey_record',
         on_delete=models.RESTRICT
     )
+
     class Meta:
         verbose_name_plural = 'Survey Unit Photographs'
 
