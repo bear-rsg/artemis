@@ -123,7 +123,8 @@ def download_model_data_csv(request):
     m2m_fields = target_model._meta.many_to_many
 
     # 5. Write the header row
-    header_row = [field.name for field in standard_fields] + [field.name for field in m2m_fields]
+    header_row = [field.name for field in standard_fields]\
+        + [field.name for field in m2m_fields]
     writer.writerow(header_row)
 
     # 6. Fetch the data (using prefetch_related for M2M performance)
