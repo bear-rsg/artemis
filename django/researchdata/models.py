@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.functions import Upper
+from django.db.models import Sum
 
 
 # 1. Reusable code
@@ -54,6 +55,13 @@ class PhotographModelAbstract(models.Model):
     class Meta:
         abstract = True
         ordering = ['-id']
+
+
+def total_related_property(related_name, field_name):
+    """
+    Get the total/sum of the specified field all related objects
+    """
+    return property(lambda self: getattr(self, related_name).aggregate(t=Sum(field_name))['t'] or 0)
 
 
 # 2. Select List Models
@@ -267,6 +275,44 @@ class SurveyRecord(models.Model):
 
     # 4. Photographs - see PhotographSurveyRecord model
 
+    # D. Totals
+    # Pottery
+    total_pottery_counted = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'pottery_counted'
+    )
+    total_pottery_collected = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'pottery_collected'
+    )
+    # Tile
+    total_tile_counted = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'tile_counted'
+    )
+    total_tile_collected = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'tile_collected'
+    )
+    # Lithic
+    total_lithic_counted = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'lithic_counted'
+    )
+    total_lithic_collected = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'lithic_collected'
+    )
+    # Other
+    total_other_counted = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'other_counted'
+    )
+    total_other_collected = total_related_property(
+        'survey_unit_materials_counted_and_collecteds',
+        'other_collected'
+    )
+
     def __str__(self):
         return self.survey_unit_id
 
@@ -285,17 +331,17 @@ class SurveyUnitMaterialsCountedAndCollected(models.Model):
     survey_record = models.ForeignKey(SurveyRecord, related_name=related_name, on_delete=models.RESTRICT)
     walker = models.ForeignKey(TeamMember, related_name=related_name, on_delete=models.RESTRICT, blank=True, null=True)
 
-    pottery_counted = models.IntegerField(blank=True, null=True)
-    pottery_collected = models.IntegerField(blank=True, null=True)
+    pottery_counted = models.IntegerField(default=0, blank=True, null=True)
+    pottery_collected = models.IntegerField(default=0, blank=True, null=True)
 
-    tile_counted = models.IntegerField(blank=True, null=True)
-    tile_collected = models.IntegerField(blank=True, null=True)
+    tile_counted = models.IntegerField(default=0, blank=True, null=True)
+    tile_collected = models.IntegerField(default=0, blank=True, null=True)
 
-    lithic_counted = models.IntegerField(blank=True, null=True)
-    lithic_collected = models.IntegerField(blank=True, null=True)
+    lithic_counted = models.IntegerField(default=0, blank=True, null=True)
+    lithic_collected = models.IntegerField(default=0, blank=True, null=True)
 
-    other_counted = models.IntegerField(blank=True, null=True)
-    other_collected = models.IntegerField(blank=True, null=True)
+    other_counted = models.IntegerField(default=0, blank=True, null=True)
+    other_collected = models.IntegerField(default=0, blank=True, null=True)
 
     @property
     def total_counted(self):

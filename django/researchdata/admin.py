@@ -252,11 +252,37 @@ class SurveyRecordAdminView(GenericAdminView):
 
     list_display = ('id', 'survey_unit_id',)
     list_display_links = ('id', 'survey_unit_id')
-    search_fields = ('id', 'survey_unit_id',)
+    list_filter = (
+        'scribe',
+        'spacing',
+        'visibility_percentage',
+        'soil',
+    )
+    search_fields = (
+        'id',
+        'survey_unit_id',
+        'scribe__name',
+        'spacing__name',
+        'soil__name',
+        'survey_unit_metadata_notes',
+        'cultivated_notes',
+        'uncultivated_notes',
+        'survey_unit_materials_observations',
+    )
     inlines = (
         SurveyUnitMaterialsCountedAndCollectedInline,
         PhotographSurveyUnitMaterialBagsCollectedInline,
         PhotographSurveyRecordInline
+    )
+    readonly_fields = (
+        'total_pottery_counted',
+        'total_pottery_collected',
+        'total_tile_counted',
+        'total_tile_collected',
+        'total_lithic_counted',
+        'total_lithic_collected',
+        'total_other_counted',
+        'total_other_collected',
     )
     fieldsets = [
         (
@@ -313,6 +339,18 @@ class SurveyRecordAdminView(GenericAdminView):
             },
         ),
         (
+            'Survey Unit Materials Counted and Collected (Totals)',
+            {
+                'fields': [
+                    ('total_pottery_counted', 'total_pottery_collected',),
+                    ('total_tile_counted', 'total_tile_collected',),
+                    ('total_lithic_counted', 'total_lithic_collected',),
+                    ('total_other_counted', 'total_other_collected',),
+                ],
+                'classes': ('collapse',),
+            },
+        ),
+        (
             'Survey Unit Materials Bags Collected',
             {
                 'fields': [(
@@ -349,7 +387,20 @@ class FeatureAdminView(GenericAdminView):
 
     list_display = ('id', 'feature_id',)
     list_display_links = ('id', 'feature_id',)
-    search_fields = ('id', 'feature_id',)
+    list_filter = (
+        'feature_type',
+        'feature_condition',
+    )
+    search_fields = (
+        'id',
+        'feature_id',
+        'feature_type__name',
+        'feature_description',
+        'survey_unit__survey_unit_id',
+        'location_description',
+        'feature_condition__name',
+        'feature_metadata_notes',
+    )
     inlines = (
         PhotographFeatureInline,
         PhotographFeatureMaterialCollectedInline,
@@ -412,7 +463,18 @@ class GriddedCollectionAdminView(GenericAdminView):
 
     list_display = ('id', 'grid_id',)
     list_display_links = ('id', 'grid_id',)
-    search_fields = ('id', 'grid_id',)
+    list_filter = (
+        'grid_size',
+        'soil',
+        'land_use',
+    )
+    search_fields = (
+        'id',
+        'grid_id',
+        'soil__name',
+        'grid_metadata_notes',
+        'land_use__name',
+    )
     inlines = (
         GridSquareInline,
         PhotographGriddedCollectionInline
@@ -475,7 +537,19 @@ class BulkMaterialAdminView(GenericAdminView):
 
     list_display = ('id', 'bulk_material_id',)
     list_display_links = ('id', 'bulk_material_id',)
-    search_fields = ('id', 'bulk_material_id',)
+    list_filter = (
+        'source_type',
+        'material_type',
+        'processed_by',
+        'checked_by',
+    )
+    search_fields = (
+        'id',
+        'bulk_material_id',
+        'source_type__name',
+        'source_id',
+        'material_type__name',
+    )
     inlines = (BulkMaterialBatchInline, FlaggedItemInline,)
 
 
@@ -500,8 +574,36 @@ class SpecialistStudyAdminView(GenericAdminView):
 
     list_display = ('id', 'study_id',)
     list_display_links = ('id', 'study_id',)
-    search_fields = ('id', 'study_id',)
-
+    list_filter = (
+        'lot_number',
+        'material_type',
+    )
+    search_fields = (
+        'id',
+        'study_id',
+        'specialist',
+        'storage_location',
+        'pottery_decoration_technique',
+        'pottery_shape',
+        'pottery_fabric_description',
+        'pottery_comparanda',
+        'pottery_notes',
+        'tile_object_type',
+        'tile_part',
+        'tile_comparanda',
+        'tile_notes',
+        'lithics_object_type',
+        'lithics_material',
+        'lithics_classification',
+        'lithics_comparanda',
+        'lithics_notes',
+        'other_object_type',
+        'other_material_or_fabric',
+        'other_material_or_fabric_description',
+        'other_manufacture',
+        'other_comparanda',
+        'other_notes',
+    )
     fieldsets = [
         (
             None,

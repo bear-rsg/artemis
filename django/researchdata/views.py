@@ -121,10 +121,23 @@ def download_model_data_csv(request):
     # 4. Extract field references
     standard_fields = target_model._meta.fields
     m2m_fields = target_model._meta.many_to_many
+    extra_fields = []
+    if target_model == models.SurveyRecord:
+        extra_fields = [
+            'total_pottery_counted',
+            'total_pottery_collected',
+            'total_tile_counted',
+            'total_tile_collected',
+            'total_lithic_counted',
+            'total_lithic_collected',
+            'total_other_counted',
+            'total_other_collected',
+        ]
 
     # 5. Write the header row
     header_row = [field.name for field in standard_fields]\
-        + [field.name for field in m2m_fields]
+        + [field.name for field in m2m_fields]\
+        + extra_fields
     writer.writerow(header_row)
 
     # 6. Fetch the data (using prefetch_related for M2M performance)
@@ -140,19 +153,21 @@ def download_model_data_csv(request):
 
         # Grab data for standard columns
         for field in standard_fields:
-            # Using getattr retrieves the actual value for this specific field
             value = getattr(instance, field.name)
             row.append(value)
 
         # Grab and format data for ManyToMany columns
         for field in m2m_fields:
             m2m_manager = getattr(instance, field.name)
-
             # Convert each related object to a string and join them with semicolons
             m2m_strings = [str(related_obj) for related_obj in m2m_manager.all()]
             joined_string = "; ".join(m2m_strings)
-
             row.append(joined_string)
+
+        # Grab data for extra fields
+        for field in extra_fields:
+            value = getattr(instance, field)
+            row.append(value)
 
         writer.writerow(row)
 
