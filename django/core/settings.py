@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     # Custom
     'account',
+    'blog',
     'general',
     'researchdata',
 ]

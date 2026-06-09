@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <section>
+        <h2>ARTEMIS Blog</h2>
+        <p>
+            Hello, and welcome to the ARTEMIS blog page. We're delighted to have you here. Below are invited posts from ARTEMIS team members on their experiences of working in Greece. We'll continue to update this page regularly with news about our project.
+        </p>
+        <div id="blog-list">
+            {% for object in object_list %}
+                {% if object.published or user.is_authenticated %}
+                    <a href="{% url 'blog:detail' object.id %}" class="blog-list-item">
+                        {% if not object.published %}
+                            <div class="blog-list-item-unpublished" title="This blog post is unpublished and not visible to public users">Unpublished</div>
+                        {% endif %}
+                        <div class="blog-list-item-title">{{ object.title }}</div>
+                        {% if object.date %}
+                            <div class="blog-list-item-date">{{ object.date | date:"d M Y" }}</div>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% empty %}
+                <p><em>(Blog posts coming soon)</em></p>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}

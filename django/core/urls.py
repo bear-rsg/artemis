@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     # Custom apps
     path('', include('general.urls')),
+    path('blog/', include('blog.urls')),
     path('data/', include('researchdata.urls')),
     # Django admin (aka 'manage' aka 'manage data')
     path('manage/', admin.site.urls),

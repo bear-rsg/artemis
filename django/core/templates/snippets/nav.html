@@ -126,6 +126,12 @@ so that it can be easily shared by both.
                     <span class="nav-item-text">About</span>
                 </a>
             </li>
+            <li class="nav-item{% if "/blog/" in request.path and "manage/" not in request.path %} active{% endif %}">
+                <a href="{% url 'blog:list' %}">
+                    <i class="fa-solid fa-rectangle-list"></i>
+                    <span class="nav-item-text">Blog</span>
+                </a>
+            </li>
             {% if user.is_authenticated %}
                 {% with user_id_str=user.id|stringformat:"s" %}
                     {% with profile_url="/account/user/"|add:user_id_str|add:"/" %}
