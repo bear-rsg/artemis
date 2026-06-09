@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div id="detail-back">
+        <a href="{% url 'blog:list' %}">&lt; Back</a>
+    </div>
+
+    <section id="blog-item">
+        {% if object.published or user.is_authenticated %}
+            {% if not object.published %}
+                <div id="blog-item-unpublished">
+                    This blog post is unpublished and not visible to public users
+                </div>
+            {% endif %}
+            <h2>{{ object.title }}</h2>
+            {% if object.date %}
+                <div id="blog-item-details">
+                    Date: {{ object.date | date:"d M Y" }}
+                </div>
+            {% endif %}
+            <div id="blog-item-article">
+                {{ object.article | safe }}
+            </div>
+        {% else %}
+            <p>You do not have permission to view this blog post</p>
+        {% endif %}
+    </section>
+
+    <script>
+        $(document).ready(function(){
+            $('#blog-item-article img').each(function() {
+                let imgSrc = $(this).attr('src');
+                $(this).wrap(`<a class="imglink" href="${imgSrc}" target="_blank" rel="noopener noreferrer"></a>`);
+            });
+        });
+    </script>
+
+
+{% endblock %}

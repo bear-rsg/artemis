@@ -211,6 +211,77 @@ section#welcome-banner h2 {
     max-width: 100%;
 }
 
+/* ---------- Blog ---------- */
+
+/* List */
+
+#blog-list {
+    margin-top: 3em;
+}
+
+.blog-list-item {
+    display: block;
+    border-top: 1px solid #DDD;
+    padding: 0.5em;
+    color: black;
+}
+
+.blog-list-item:hover {
+    background: var(--color-primary);
+    text-decoration: none;
+    color: white;
+}
+
+.blog-list-item-date {
+    font-weight: normal;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.blog-list-item-unpublished,
+#blog-item-unpublished {
+    width: fit-content;
+    padding: 0.4em 0.8em;
+    background: var(--color-red);
+    color: white;
+}
+
+/* Detail */
+
+#blog-item-unpublished {
+    margin: 0 auto 1em auto;
+}
+
+#blog-item-details {
+    text-align: center;
+    font-weight: bold;
+}
+
+#blog-item-article {
+    margin: 2em 0;
+}
+
+#blog-item-article .imglink {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 2em auto 0.5em auto;
+}
+
+#blog-item-article img {
+    display: block;
+    width: 30em;
+    max-width: 100%;
+}
+
+#blog-item-article .imgcaption {
+    display: block;
+    text-align: center;
+    color: #696969;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
 /* ---------- Downloads ---------- */
 
 .downloads-downloadlink {
