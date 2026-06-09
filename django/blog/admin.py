@@ -22,7 +22,6 @@ def unpublish(modeladmin, request, queryset):
 unpublish.short_description = "Unpublish selected items (will not appear on main site)"
 
 
-
 class BlogAdminView(admin.ModelAdmin):
     """
     Customise the content of the list of Blog in the Django admin
