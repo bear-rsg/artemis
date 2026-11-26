@@ -25,6 +25,9 @@ ALLOWED_HOSTS = ['*']/['artemis.bham.ac.uk']
 # Provide the email address for the site admin (e.g. the researcher/research team)
 ADMIN_EMAIL = '...@bham.ac.uk'
 
+# Provide the email addresses for users that should have super user access (e.g. RSE)
+SUPERUSERS = []
+
 # Set the database name below
 DATABASES = {
     'default': {

@@ -1,10 +1,7 @@
 from django.contrib import admin
 from .models import User
-from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 
-
-admin.site.unregister(Group)
 
 title = 'ARTEMIS'
 admin.site.site_header = title
@@ -33,6 +30,7 @@ class UserAdmin(UserAdmin):
                     'last_name',
                     'password1',
                     'password2',
+                    'groups',
                 ),
             },
         ),
@@ -48,8 +46,9 @@ class UserAdmin(UserAdmin):
                     'last_name',
                     'password',
                     'is_active',
+                    'groups',
                     'date_joined',
-                    'last_login'
+                    'last_login',
                 ),
             },
         ),

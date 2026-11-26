@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db.models.functions import Upper
+from django.conf import settings
 from django.db import models
 
 
@@ -41,9 +42,10 @@ class User(AbstractUser):
         # Force email and username to be lower case and identical, so users can login with email
         self.email = self.email.strip().lower()
         self.username = self.email
-        # Ensure all accounts are 'staff' and 'superuser' so they can access admin dashboard
+        # Ensure all accounts are 'staff' so they can access admin dashboard
         self.is_staff = True
-        self.is_superuser = True
+        # Ensure only superusers defined in settings are set as superusers
+        self.is_superuser = True if self.email in settings.SUPERUSERS else False
 
         super().save(*args, **kwargs)
 
